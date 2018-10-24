@@ -29,12 +29,15 @@ body{
   font-size: 170%;
 }
 
+
+
 h1{
+  height: 150px;
   background-color: steelBlue;
   text-align: center;
   color: white;
   line-height: 1.1;
-  margin: 0;
+  margin: auto 0;
   padding: 20px 0;
   text-transform: uppercase;
 }
@@ -62,6 +65,13 @@ button:hover{
 #message{
   display: inline-block;
   width: 10%;
+  font-weight: 500;
+}
+
+#scoreDisp{
+  display: inline-block;
+  width: 10%;
+  font-weight: 500;
 }
 
 #stripe{

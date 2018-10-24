@@ -8,54 +8,91 @@ var messageDisp = document.getElementById("message");
 var h1 = document.querySelector("h1");
 var resetBtn = document.getElementById("reset");
 var easyBtn = document.getElementById("easyBtn");
+var mediumBtn = document.getElementById("mediumBtn");
 var hardBtn = document.getElementById("hardBtn");
+var guesses = 0;
+var guessesLeft = document.getElementById("guesses");
+var scored = document.getElementById("scored");
+var score = 0;
+var mode = 1;
+var gameOver = false;
+var h1String = h1.innerHTML;
+
+resetGuesses(2);
+changeScore(0);
 
 easyBtn.addEventListener("click",function(){
-   easyBtn.classList.toggle("selected");
-   hardBtn.classList.toggle("selected");
-   colors = generateRandomColors(3);
-   pickedColor = pickColor();
-   colorDisp.textContent = pickedColor;
-   numSquares = 3;
-   for(var i = 0; i < squares.length; i++){
-     if(colors[i]){
-       squares[i].style.backgroundColor = colors[i];
-     }else{
-     squares[i].style.display = "none";
-     }
-   }
+  mode = 0;
+  gameOver = false;
+  changeScore(0);
+  easyBtn.classList.add("selected");
+  mediumBtn.classList.remove("selected");
+  hardBtn.classList.remove("selected");
+  refillSquares(3);
+  innerH1(pickedColor);
+  resetGuesses(3);
+  for(var i = 0; i < squares.length; i++){
+    if(colors[i]){
+      squares[i].style.backgroundColor = colors[i];
+    }else{
+      squares[i].style.display = "none";
+    }
+  }
 
+});
+
+mediumBtn.addEventListener("click",function(){
+  mode = 1;
+  gameOver = false;
+  changeScore(0);
+  hardBtn.classList.remove("selected");
+  mediumBtn.classList.add("selected");
+  easyBtn.classList.remove("selected");
+  refillSquares(6);
+  innerH1(pickedColor);
+  resetGuesses(2);
+  colorDisp.textContent = pickedColor;
+  for(var i = 0; i < squares.length; i++){
+    squares[i].style.backgroundColor = colors[i];
+    squares[i].style.display = "block";
+  }
 });
 
 hardBtn.addEventListener("click",function(){
-   hardBtn.classList.toggle("selected");
-   easyBtn.classList.toggle("selected");
-   colors = generateRandomColors(6);
-   pickedColor = pickColor();
-   numSquares = 6;
-   colorDisp.textContent = pickedColor;
-   for(var i = 0; i < squares.length; i++){
-     squares[i].style.backgroundColor = colors[i];
-     squares[i].style.display = "block";
-   }
+  mode = 2;
+  gameOver = false;
+  hardBtn.classList.add("selected");
+  mediumBtn.classList.remove("selected");
+  easyBtn.classList.remove("selected");
+  refillSquares(6);
+  innerH1(pickedColor);
+  resetGuesses(1);
+  colorDisp.textContent = pickedColor;
+  for(var i = 0; i < squares.length; i++){
+    squares[i].style.backgroundColor = colors[i];
+    squares[i].style.display = "block";
+  }
 });
 
-//Reset Button
 resetBtn.addEventListener("click",function(){
-  //generate random colors
-  colors = generateRandomColors(numSquares);
-  //pick random color
-  pickedColor = pickColor();
-  //change colorDisp
-  colorDisp.textContent = pickedColor;
+  refillSquares(numSquares);
+  innerH1(pickedColor);
+  gameOver = false;
+  changeScore(0);
+
+  if(mode === 0){
+    resetGuesses(3);
+  }else if (mode === 1) {
+    resetGuesses(2);
+  }else if (mode === 2) {
+    resetGuesses(1);
+  }
   //change color of the squares
   for(var i = 0; i < squares.length; i++){
     //Add new colors to squares
     squares[i].style.backgroundColor = colors[i];
   }
   h1.style.backgroundColor = "steelBlue";
-  resetBtn.textContent = "New Colors";
-  messageDisp.textContent = "";
 });
 
 
@@ -66,50 +103,87 @@ for(var i = 0; i < squares.length; i++){
   squares[i].style.backgroundColor = colors[i];
   //Add eventlistener
   squares[i].addEventListener("click",function(){
-  //Grab color of picked square
-   var clickedColor = this.style.backgroundColor;
-  //Compare color of picked color
-  if(clickedColor === pickedColor){
-     messageDisp.textContent = "Correct!";
-     changeColor(clickedColor);
-     h1.style.backgroundColor = clickedColor;
-     resetBtn.textContent = "Play Again?";
-  }else{
-     this.style.backgroundColor = "#232323";
-     messageDisp.textContent = "Try again";
-       }
-  });
-}
+    //Grab color of picked square
+    if(!gameOver){
+      var clickedColor = this.style.backgroundColor;
+      //Compare color of picked color
+      if(clickedColor === pickedColor){
 
-function changeColor(color){
-  //loop through all squares
-  for(var i = 0; i < squares.length; i++){
-   //change each color to match given color
-   squares[i].style.backgroundColor = color;
+        changeColor(clickedColor);
+        changeScore(score+1);
+        h1.style.backgroundColor = clickedColor;
+        setTimeout(function() {
+          refillSquares(numSquares);
+          for(var i = 0; i < numSquares; i++){
+            squares[i].style.backgroundColor = colors[i];
+            squares[i].style.display = "block";
+            h1.style.backgroundColor = "steelBlue";
+          } }, 2000);
+
+
+        }else{
+          this.style.backgroundColor = "#232323";
+          resetGuesses(guesses-1);
+          if(guesses <= 0){
+            gameOver = true
+            h1.textContent = "You Lost!";
+
+          }
+        }
+      }
+    });
   }
-}
 
-function pickColor(){
-  //pick a random number
-  var random = Math.floor(Math.random() * colors.length);
-  return colors[random];
-}
-
-function generateRandomColors(num){
-  var arr = [];
-  for(var i = 0; i < num; i++){
-     arr.push(randomColor());
+  function changeColor(color){
+    //loop through all squares
+    for(var i = 0; i < squares.length; i++){
+      //change each color to match given color
+      squares[i].style.backgroundColor = color;
+    }
   }
-  return arr;
-}
 
-function randomColor(){
-  //red 0-255
-  var R = Math.floor(Math.random() * 255);
-  //green 0-255
-  var G = Math.floor(Math.random() * 255);
-  //blue 0-255
-  var B = Math.floor(Math.random() * 255);
+  function pickColor(){
+    //pick a random number
+    var random = Math.floor(Math.random() * colors.length);
+    return colors[random];
+  }
 
-  return "rgb(" + R + ", " + G + ", " + B + ")";
-}
+  function generateRandomColors(num){
+    var arr = [];
+    for(var i = 0; i < num; i++){
+      arr.push(randomColor());
+    }
+    return arr;
+  }
+
+  function resetGuesses(num){
+    guesses = num;
+    guessesLeft.textContent = num;
+  }
+
+  function changeScore(num){
+    score = num;
+    scored.textContent = num;
+  }
+
+  function innerH1(color){
+     h1.innerHTML = "The Great <br> <span id=\"colorDisp\">" + color + "</span> <br>Color Game";
+  }
+
+  function randomColor(){
+    //red 0-255
+    var R = Math.floor(Math.random() * 255);
+    //green 0-255
+    var G = Math.floor(Math.random() * 255);
+    //blue 0-255
+    var B = Math.floor(Math.random() * 255);
+
+    return "rgb(" + R + ", " + G + ", " + B + ")";
+  }
+
+  function refillSquares(num){
+    colors = generateRandomColors(num);
+    pickedColor = pickColor();
+    colorDisp.textContent = pickedColor;
+    numSquares = num;
+  }
