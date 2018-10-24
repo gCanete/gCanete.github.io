@@ -2,17 +2,29 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="scoreKeep.css">
-    <title>Score Keeping</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title> RGB Color Game</title>
   </head>
   <body>
-    <h1><span id="p1Disp">0</span> to <span id="p2Disp">0</span></h1>
-     <p>Playing to <span>5</span></p>
-     <input type="number" name="" value="">
-     <button type="button" name="button" id="p1">Player One</button>
-     <button type="button" name="button" id="p2">Player Two</button>
-     <button type="button" name="button" id="rst">Reset</button>
+  <h1>The Great <br> <span id="colorDisp">RGB</span> <br>Color Game</h1>
+  <div id="stripe">
+    <button id="reset">New Colors</button>
+    <span id="message"></span>
+    <button id="easyBtn">Easy</button>
+    <button id="hardBtn" class="selected">Hard</button>
+  </div>
 
-     <script type="text/javascript" src="scoreKeep.js"></script>
+  <div id="container">
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+  </div>
+
+
+  <script type="text/javascript" src="game.js"></script>
   </body>
 </html>
