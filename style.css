@@ -21,7 +21,7 @@ body{
 }
 
 #container{
-  max-width: 650px;
+  max-width: 50%;
   margin: 20px auto;
 }
 
@@ -62,17 +62,25 @@ button:hover{
   background-color: steelBlue;
 }
 
+#dispContainer{
+  height: 100%;
+  display: inline-block;
+  width: 20%;
+  font-weight: 500;
+}
+
 #message{
   display: inline-block;
-  width: 10%;
+  width: 45%;
   font-weight: 500;
 }
 
 #scoreDisp{
   display: inline-block;
-  width: 10%;
+  width: 45%;
   font-weight: 500;
 }
+
 
 #stripe{
   background-color: white;
